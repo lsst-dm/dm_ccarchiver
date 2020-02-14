@@ -1,0 +1,16 @@
+[Unit]
+Description=CCArchiverCSC Service
+PartOf=cc-archiver.service
+After=cc-archiver.service
+
+[Service]
+Type=simple
+User=ARC
+Environment="DM_CCARCHIVER_DIR=/opt/lsst/dm_CCArchiver"
+PassEnvironment=DM_CCARCHIVER_DIR
+WorkingDirectory=/opt/lsst/dm_CCArchiver
+ExecStart=/opt/lsst/dm_CCArchiver/bin/run_ccarchiver.sh
+Restart=always
+
+[Install]
+WantedBy=cc-archiver.service

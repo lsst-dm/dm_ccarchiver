@@ -1,0 +1,10 @@
+[Unit]
+Description=CCArchiver Services
+
+[Service]
+Type=oneshot
+ExecStart=/bin/true
+RemainAfterExit=yes
+
+[Install]
+WantedBy=cc-archiver.target

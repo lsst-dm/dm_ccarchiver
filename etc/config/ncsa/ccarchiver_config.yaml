@@ -1,0 +1,31 @@
+# Configuration settings for CCArchiver
+ROOT:
+  REDIS_HOST: localhost
+  ARCHIVER_REDIS_DB: 14
+  FORWARDER_PUBLISH_QUEUE: cc_foreman_ack_publish
+  OODS_PUBLISH_QUEUE: cc_publish_to_oods
+  OODS_CONSUME_QUEUE: oods_publish_to_cc
+  ARCHIVE_CTRL_PUBLISH_QUEUE: archive_ctrl_publish # this should probably be at_archive_ctrl_publish
+  ARCHIVE_CTRL_CONSUME_QUEUE: archive_ctrl_consume # this should probably be at_archive_ctrl_consume
+  TELEMETRY_QUEUE: telemetry_queue # this should probably be at_telemetry_queue
+  CAMERA_NAME: COMCAM
+  ARCHIVER_NAME: CC
+
+  ACK_TIMEOUT: 10
+
+  CSC:
+    BEACON:
+        SECONDS_TO_EXPIRE: 10
+        SECONDS_TO_UPDATE: 3
+
+  BASE_BROKER_ADDR: 141.142.238.15:5672/%2ftest_cc
+  ARCHIVE:
+    ARCHIVE_LOGIN: ARC
+    ARCHIVE_IP: 141.142.238.15
+    CHECKSUM_TYPE: MD5   # Current available options: MD5, CRC-32 
+    FORWARDER_STAGING: /data/staging/ccforwarder
+    OODS_STAGING: /data/staging/oods
+    DBB_STAGING: /data/staging/dbb
+  ATS:
+    WFS_RAFT: "00"
+    WFS_CCD: [ "00" ]
