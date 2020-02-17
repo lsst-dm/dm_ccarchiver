@@ -23,7 +23,7 @@ import asyncio
 import logging
 import pathlib
 from lsst.dm.csc.base.archiver_csc import ArchiverCSC
-from lsst.dm.CCArchiver.atdirector import CCDirector
+from lsst.dm.CCArchiver.ccdirector import CCDirector
 from lsst.ts import salobj
 from lsst.ts.salobj import State
 
