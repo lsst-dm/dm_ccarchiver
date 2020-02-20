@@ -62,3 +62,7 @@ class CCArchiverCSC(ArchiverCSC):
 
         self.current_state = None
         LOGGER.info("************************ Starting CCArchiver ************************")
+
+    @staticmethod
+    def get_config_pkg():
+        return "dm_config_cc"
