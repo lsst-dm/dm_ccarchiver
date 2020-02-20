@@ -54,7 +54,7 @@ class CCArchiverCSC(ArchiverCSC):
                                         evt_max_history=0)
         self.efd_remote.evt_largeFileObjectAvailable.callback = self.largeFileObjectAvailableCallback
 
-        self.director = CCDirector(self, "CCArchiver", "atarchiver_config.yaml", "CCArchiverCSC.log")
+        self.director = CCDirector(self, "CCArchiver", "ccarchiver_config.yaml", "CCArchiverCSC.log")
         self.director.configure()
 
         self.transitioning_to_fault_evt = asyncio.Event()
