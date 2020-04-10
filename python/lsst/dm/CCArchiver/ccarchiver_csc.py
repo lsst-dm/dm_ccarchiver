@@ -49,10 +49,10 @@ class CCArchiverCSC(ArchiverCSC):
         self.camera_remote.evt_endReadout.callback = self.endReadoutCallback
         self.camera_remote.evt_startIntegration.callback = self.startIntegrationCallback
 
-        efd_events = {'largeFileObjectAvailable'}
-        self.efd_remote = salobj.Remote(domain, "EFD", index=0, readonly=True, include=efd_events,
+        cchs_events = {'largeFileObjectAvailable'}
+        self.cchs_remote = salobj.Remote(domain, "CCHeaderService", index=0, readonly=True, include=cchs_events,
                                         evt_max_history=0)
-        self.efd_remote.evt_largeFileObjectAvailable.callback = self.largeFileObjectAvailableCallback
+        self.cchs_remote.evt_largeFileObjectAvailable.callback = self.largeFileObjectAvailableCallback
 
         self.director = CCDirector(self, "CCArchiver", "ccarchiver_config.yaml", "CCArchiverCSC.log")
         self.director.configure()
