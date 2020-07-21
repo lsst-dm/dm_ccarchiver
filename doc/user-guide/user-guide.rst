@@ -35,8 +35,8 @@
 
 .. Fill out data so contacts section below is auto-populated
 .. add name and email between the *'s below e.g. *Marie Smith <msmith@lsst.org>*
-.. |CSC_developer| replace::  *Replace-with-name-and-email*
-.. |CSC_product_owner| replace:: *Replace-with-name-and-email*
+.. |CSC_developer| replace::  *Stephen R. Pietrowicz <srp@illinois.edu>*
+.. |CSC_product_owner| replace:: *Michael Reuter <mareuter@lsst.org>*
 
 .. _User_Guide:
 
@@ -45,14 +45,14 @@ CCArchiver User Guide
 #######################
 
 .. Update links and labels below
-.. image:: https://img.shields.io/badge/GitHub-ts_athexapod-green.svg
-    :target: https://github.com/lsst-ts/ts_athexapod
-.. image:: https://img.shields.io/badge/Jenkins-ts_athexapod-green.svg
-    :target: https://tssw-ci.lsst.org/job/LSST_Telescope-and-Site/job/ts_athexapod/
-.. image:: https://img.shields.io/badge/Jira-ts_athexapod-green.svg
-    :target: https://jira.lsstcorp.org/issues/?jql=labels+%3D+ts_athexapod
-.. image:: https://img.shields.io/badge/ts_xml-ATHexapod-green.svg
-    :target: https://ts-xml.lsst.io/sal_interfaces/ATHexapod.html
+.. image:: https://img.shields.io/badge/GitHub-dm_ccarchiver-green.svg
+    :target: https://github.com/lsst-dm/dm_CCArchiver
+.. image:: https://img.shields.io/badge/Jenkins-dm_CCArchiver-green.svg
+       :target: https://tssw-ci.lsst.org/job/LSST_Telescope-and-Site/job/dm_CCArchiver/
+.. image:: https://img.shields.io/badge/Jira-dm_ccarchiver-green.svg
+    :target: https://jira.lsstcorp.org/issues/?jql=labels+%3D+dm_ccarchiver
+.. image:: https://img.shields.io/badge/ts_xml-CCArchiver-green.svg
+    :target: https://ts-xml.lsst.io/sal_interfaces/CCArchiver.html
 
 
 [This area should give an introduction to users, but at greater depth than the overview on the higher-level page. Some repetition is fine.

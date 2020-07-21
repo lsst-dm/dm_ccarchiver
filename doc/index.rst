@@ -37,8 +37,8 @@
 
 .. Fill out data so contacts section below is auto-populated
 .. add name and email between the *'s below e.g. *Marie Smith <msmith@lsst.org>*
-.. |CSC_developer| replace::  *Replace-with-name-and-email*
-.. |CSC_product_owner| replace:: *Replace-with-name-and-email*
+.. |CSC_developer| replace::  *Stephen R Pietrowicz <srp@illinois.edu>*
+.. |CSC_product_owner| replace:: *Michael Reuter <mareuter@lsst.org>*
 
 .. Note that the "ts_" prefix is omitted from the title
 
@@ -48,12 +48,12 @@ CCArchiver
 
 .. update the following links to point to your CSC (rather than the athexapod)
 .. image:: https://img.shields.io/badge/GitHub-dm_CCArchiver-green.svg
-    :target: https://github.com/lsst-ts/dm_CCArchiver
+    :target: https://github.com/lsst-dm/dm_CCArchiver
 .. image:: https://img.shields.io/badge/Jenkins-dm_CCArchiver-green.svg
     :target: https://tssw-ci.lsst.org/job/LSST_Telescope-and-Site/job/dm_CCArchiver/
 .. image:: https://img.shields.io/badge/Jira-dm_CCArchiver-green.svg
     :target: https://jira.lsstcorp.org/issues/?jql=labels+%3D+dm_CCArchiver
-.. image:: https://img.shields.io/badge/ts_xml-{cookiecutter.csc_name}}-green.svg
+.. image:: https://img.shields.io/badge/ts_xml-dm_CCArchiver-green.svg
     :target: https://ts-xml.lsst.io/sal_interfaces/CCArchiver.html
 
 .. TODO: Delete the note when the page becomes populated
@@ -70,6 +70,58 @@ Overview
 [This section is to present an overview of the CSC.
 This should include a top-level description of the primary use-case(s) as well as any pertinent information.
 Example information may be link(s) to the higher-level classes which may be used to operate it, or mention of other CSCs (with links) that it operates in concert with.]
+
+The Data Management ComCam Archiver (dm_CCArchiver) coordinates archiving
+activities for the Commissioning Camera.  This service interacts with other
+services coordinate retrieval and archival of image data from the data
+acquisition system.
+
+The primary services that the CCArchiver interacts with are the Forwarder 
+(dm_Forwarder) and the ComCam Controller.  The Forwarder retrieves and assembles
+images. The ComCam Controller presents where files should be deposited and 
+stages files where the Data Backbone (DBB) and the ComCam Observatory 
+Operations Data Service (OODS) can act on them.  These services communicate
+to each other using RabbitMQ.  A Redis database is also used to advertise
+service availablity and service health.
+
+
+The archiver begins in the STANDBY state. When it receives a START command,
+it transitions to the DISABLED state.  This causes the CCArchiver to attempt
+to pair with an available Forwarder service through a Redis database. It also
+establishes connections to a RabbitMQ server. After the archiver receives an 
+ENABLE SAL command, it is ready to receive messages.
+
+When the "startIntegration" message is received, the CCArchiver sends a 
+message to the ComCam Controller, informing it that a new archive image will
+arrive soon.  In the controller’s response is the target directory for where
+the image is supposed to be deposited by the forwarder. This target directory
+changes over time. The target directory is then sent in a message to the 
+Forwarder, which sends back an acknowledgment that the message was received.
+
+When the "endReadout" message is received, the CCArchiver sends the message to
+the Forwarder, which sends back an acknowledgment that the message was
+received.
+
+
+When the "largeFileObjectAvailable" is received indicating that the header is
+available from the HeaderService, the CCArchiver sends the message to the
+Forwarder, which sends back an acknowledgment that the message was received.
+
+When the telemetry message "IMAGE_RETRIEVAL_FOR_ARCHIVING" message is received
+via RabbitMQ from the ComCam Controller, the CCArchiver translates this into the
+"imageRetrievalForArchiving" message and transmits it via SAL.  
+
+Note that "IMAGE_RETRIEVAL_FOR_ARCHIVING" indicates that the Forwarder has
+contacted the ComCam Controller and told it that it has finished writing 
+the file.  The ComCam Controller links data to the staging area of the DBB
+and the ComCam OODS. Additionally, the Controller sends a message to the 
+ComCam OODS that it can ingest the file that was written.  The ComCam OODS
+ingests the images into the Butler repository and issues a RabbitMQ 
+message to the ComCam Archiver about the status of the file ingestion.  
+
+When the message "CC_FILE_INGEST_REQUEST" is received from the ComCam OODS,
+the ComCam Archiver translates that messages and transmits the status of the 
+Butler file ingestion via SAL as a CCArchiver event.
 
 .. note:: If you are interested in viewing other branches of this repository append a `/v` to the end of the url link. For example `https://ts-xml.lsst.io/v/`
 
