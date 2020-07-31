@@ -27,11 +27,23 @@ LOGGER = logging.getLogger(__name__)
 
 class CCDirector(MessageDirector):
     """ Specialization of MessageDirector to handle archiver transactions
+
+    Parameters
+    ----------
+    parent : `ArchiverCSC`
+        Parent class that sends out SAL messages
+    name : `str`
+        The name of the ArchiverCSC associated with this MessageDirector
+    config_filename : `str`
+        File name containing YAML configuration
+    log_filename : `str`
+        File name to use to write log files
     """
     def __init__(self, parent, name, config_filename, log_filename):
         super().__init__(parent, name, config_filename, log_filename)
         self.parent = parent
 
+        # setup callback table for incoming RabbitMQ messages
         self._msg_actions = {'IMAGE_IN_OODS': self.process_image_in_oods,
                              'ARCHIVE_HEALTH_CHECK_ACK': self.process_archiver_health_check_ack,
                              'CC_FWDR_XFER_PARAMS_ACK': self.process_xfer_params_ack,
@@ -42,6 +54,8 @@ class CCDirector(MessageDirector):
                              'NEW_CC_ARCHIVE_ITEM_ACK': self.process_new_item_ack}
 
     def configure(self):
+        """configure using parameters from the YAML configuration file
+        """
         super().configure()
         config = self.getConfiguration()
         root = config['ROOT']
@@ -63,4 +77,3 @@ class CCDirector(MessageDirector):
         self.ARCHIVE_CTRL_PUBLISH_QUEUE = self.config_val(root, 'ARCHIVE_CTRL_PUBLISH_QUEUE')
         self.ARCHIVE_CTRL_CONSUME_QUEUE = self.config_val(root, 'ARCHIVE_CTRL_CONSUME_QUEUE')
         self.TELEMETRY_QUEUE = self.config_val(root, 'TELEMETRY_QUEUE')
-    
