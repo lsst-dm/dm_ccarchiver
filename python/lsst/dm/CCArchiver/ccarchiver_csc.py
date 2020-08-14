@@ -25,7 +25,6 @@ import pathlib
 from lsst.dm.csc.base.archiver_csc import ArchiverCSC
 from lsst.dm.CCArchiver.ccdirector import CCDirector
 from lsst.ts import salobj
-from lsst.ts.salobj import State
 
 LOGGER = logging.getLogger(__name__)
 
@@ -51,9 +50,8 @@ class CCArchiverCSC(ArchiverCSC):
 
         domain = salobj.Domain()
 
-
-        # set up receiving SAL messages 
-        salinfo = salobj.SalInfo(domain=domain, name="CCArchiver", index=0)
+        # set up receiving SAL messages
+        salobj.SalInfo(domain=domain, name="CCArchiver", index=0)
 
         # receive events from CCCamera
         camera_events = {'endReadout', 'startIntegration'}
@@ -64,8 +62,9 @@ class CCArchiverCSC(ArchiverCSC):
 
         # receive events from CCHeaderService
         cchs_events = {'largeFileObjectAvailable'}
-        self.cchs_remote = salobj.Remote(domain, "CCHeaderService", index=0, readonly=True, include=cchs_events,
-                                        evt_max_history=0)
+        self.cchs_remote = salobj.Remote(domain, "CCHeaderService",
+                                         index=0, readonly=True, include=cchs_events,
+                                         evt_max_history=0)
         self.cchs_remote.evt_largeFileObjectAvailable.callback = self.largeFileObjectAvailableCallback
 
         # set up message director for ComCam
@@ -82,6 +81,10 @@ class CCArchiverCSC(ArchiverCSC):
 
     @staticmethod
     def get_config_pkg():
-        """ returns configuration package used by CCArchiverCSC
+        """Get configuration package used by CCArchiverCSC
+
+        Returns
+        -------
+        config_pkg : `str`
         """
         return "dm_config_cc"

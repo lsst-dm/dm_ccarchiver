@@ -65,7 +65,7 @@ class CCDirector(MessageDirector):
         self.ARCHIVER_NAME = self.config_val(root, 'ARCHIVER_NAME')
         self.SHORT_NAME = self.config_val(root, 'SHORT_NAME')
         self.ASSOCIATION_KEY = self.config_val(root, 'ASSOCIATION_KEY')
-        
+
         self.FILE_INGEST_REQUEST = self.config_val(root, 'FILE_INGEST_REQUEST')
         self.NEW_ARCHIVE_ITEM = self.config_val(root, 'NEW_ARCHIVE_ITEM')
         self.FWDR_XFER_PARAMS = self.config_val(root, 'FWDR_XFER_PARAMS')
