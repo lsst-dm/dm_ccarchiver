@@ -18,7 +18,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import asyncio
 import logging
 from lsst.dm.csc.base.archive_controller import ArchiveController
 
@@ -26,13 +25,38 @@ LOGGER = logging.getLogger(__name__)
 
 
 class CCArchiveController(ArchiveController):
+    """CCArchiveController is a subclass of ArchiveController which
+    represents the ComCam Archive Controller
+
+    Parameters
+    ----------
+    name : `str`
+        The name of this controller
+    config_filename : `str`
+        The configuration file to be used to initalize this controller
+    log_filename : `str`
+        The file to which logging messages are sent
+    """
+
     def __init__(self, name, config_filename, log_filename):
         super().__init__(name, config_filename, log_filename)
 
     @classmethod
     async def create(cls, name, config_filename, log_filename):
-        
+        """ Class method to initialize CCArchiver controller
+
+        Parameters
+        ----------
+        name : `str`
+            The name of this controller
+        config_filename : `str`
+            The configuration file to be used to initalize this controller
+        log_filename : `str`
+            The file to which logging messages are sent
+        """
         self = CCArchiveController(name, config_filename, log_filename)
+
+        # initializes the table used for callbacks for incoming RabbitMQ messages
         self._msg_actions = {'ARCHIVE_HEALTH_CHECK': self.process_health_check,
                              'NEW_CC_ARCHIVE_ITEM': self.process_new_archive_item,
                              'FILE_TRANSFER_COMPLETED': self.process_file_transfer_completed}
