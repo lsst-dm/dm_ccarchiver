@@ -55,9 +55,46 @@ CCArchiver User Guide
     :target: https://ts-xml.lsst.io/sal_interfaces/CCArchiver.html
 
 
-[This area should give an introduction to users, but at greater depth than the overview on the higher-level page. Some repetition is fine.
-Discussion of high-level control classes (if applicable), primary use cases, links to any useful documentation etc can be included.
-Reference to configurations may also be worthwhile]
+The Archiver interacts with the Archive Controller and the Forwarder to 
+coordinate triggering image retrieval and storage. It receives commands 
+and events from the SAL DDS messaging system.  This includes commands to 
+change state and events from the Camera and Header Service.  
+
+The Archiver also interacts with the Redis key/value store to hold state 
+information, and the RabbitMQ broker to send/receive messages from the 
+Controller, Forwarder, and Observatory Operations Data Service (OODS).
+
+The Archive Controller handles operations for images. It sets up storage
+locations that the Forwarder uses and creates hard links for incoming 
+files which are later used by the OODS and the Data Backbone.
+
+The Archiver and the Controller each run in their own Docker container.
+
+The user has very little direct interaction with the Archiver, other than being able to get it to change states.  The Archiver's activities are automatic when it enters the ENABLED state, and no direct user interaction is required for it to operate.
+
+Usage
+
+The Archiver begins in STANDBY mode when it first starts.
+
+When a "start" command is sent to the Archiver while it is in STANDBY state,
+it transitions to the DISABLED state.
+
+
+When an "enable" command is sent to the Archiver, it transitions from DISABLED
+to the ENABLED state.  When the Archiver is in ENABLED state will accept
+incoming SAL messages, and will act on them as described in the "Overview"
+section.
+
+If the CC Archiver is in the ENABLED state, sending it "disable" will put it
+into the DISABLED state.  Once this is done, incoming messages that it had 
+previously been listening to will be ignored.
+
+If the CC Archiver is in the DISABLED state, sending it "standby" will put it
+into the STANDBY state.
+
+When an "exitControl" command is sent to the Archiver's process while it is in 
+STANDBY, and its process will exit.
+
 
 CCArchiver Interface
 ======================
