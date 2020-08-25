@@ -25,12 +25,21 @@ import pathlib
 from lsst.dm.csc.base.archiver_csc import ArchiverCSC
 from lsst.dm.CCArchiver.ccdirector import CCDirector
 from lsst.ts import salobj
-from lsst.ts.salobj import State
 
 LOGGER = logging.getLogger(__name__)
 
 
 class CCArchiverCSC(ArchiverCSC):
+    """ CCArchiverCSC is a specialization of an Archiver CSC
+
+    Parameters
+    ----------
+    schema_file : `str`
+    index : `str`
+    config_dir : `str`
+    initial_state : `lsst.ts.salobj.State`
+    initial_simulation_mode : `int`
+    """
 
     def __init__(self, schema_file, index, config_dir=None, initial_state=salobj.State.STANDBY,
                  initial_simulation_mode=0):
@@ -41,22 +50,29 @@ class CCArchiverCSC(ArchiverCSC):
 
         domain = salobj.Domain()
 
-        salinfo = salobj.SalInfo(domain=domain, name="CCArchiver", index=0)
+        # set up receiving SAL messages
+        salobj.SalInfo(domain=domain, name="CCArchiver", index=0)
 
+        # receive events from CCCamera
         camera_events = {'endReadout', 'startIntegration'}
         self.camera_remote = salobj.Remote(domain, "CCCamera", index=0, readonly=True, include=camera_events,
                                            evt_max_history=0)
         self.camera_remote.evt_endReadout.callback = self.endReadoutCallback
         self.camera_remote.evt_startIntegration.callback = self.startIntegrationCallback
 
+        # receive events from CCHeaderService
         cchs_events = {'largeFileObjectAvailable'}
-        self.cchs_remote = salobj.Remote(domain, "CCHeaderService", index=0, readonly=True, include=cchs_events,
-                                        evt_max_history=0)
+        self.cchs_remote = salobj.Remote(domain, "CCHeaderService",
+                                         index=0, readonly=True, include=cchs_events,
+                                         evt_max_history=0)
         self.cchs_remote.evt_largeFileObjectAvailable.callback = self.largeFileObjectAvailableCallback
 
+        # set up message director for ComCam
         self.director = CCDirector(self, "CCArchiver", "ccarchiver_config.yaml", "CCArchiverCSC.log")
         self.director.configure()
 
+        # used to indicate that the CSC is in the process of transitioning to the FAULT state so
+        # that it happens once, and not multiple times.
         self.transitioning_to_fault_evt = asyncio.Event()
         self.transitioning_to_fault_evt.clear()
 
@@ -65,4 +81,10 @@ class CCArchiverCSC(ArchiverCSC):
 
     @staticmethod
     def get_config_pkg():
+        """Get configuration package used by CCArchiverCSC
+
+        Returns
+        -------
+        config_pkg : `str`
+        """
         return "dm_config_cc"

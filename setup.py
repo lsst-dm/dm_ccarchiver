@@ -4,7 +4,7 @@ import sys
 from setuptools import setup, find_namespace_packages, setuptools
 import pathlib
 
-install_requires=["pyyaml", "pika", "redis"]
+install_requires = ["pyyaml", "pika", "redis"]
 
 tools_path = pathlib.PurePosixPath(setuptools.__path__[0])
 base_prefix = pathlib.PurePosixPath(sys.base_prefix)
@@ -18,7 +18,8 @@ setup(
     install_requires=install_requires,
     package_dir={"": "python"},
     packages=find_namespace_packages(where="python"),
-    scripts=["bin/run_cc_archiver_csc.py", "bin/run_ccarchive_controller.py", "bin/run_ccarchive_controller.sh", "bin/run_ccarchiver.sh" ],
+    scripts=["bin/run_cc_archiver_csc.py", "bin/run_ccarchive_controller.py",
+             "bin/run_ccarchive_controller.sh", "bin/run_ccarchiver.sh"],
     data_files=[(os.path.join(data_files_path, "schema"), ["schema/CCArchiver.yaml"])],
     include_package_data=True,
     zip_safe=False,
