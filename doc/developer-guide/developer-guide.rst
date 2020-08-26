@@ -14,7 +14,9 @@ CCArchiver Developer Guide
 .. image:: https://img.shields.io/badge/ts_xml-CCArchiver-green.svg
     :target: https://ts-xml.lsst.io/sal_interfaces/CCArchiver.html
 
+
 Introduction
+============
 
 The primary services that the CCArchiver interacts with are the Forwarder 
 (dm_Forwarder) and the ComCam Controller.  The Forwarder retrieves and assembles
@@ -23,7 +25,6 @@ stages files where the Data Backbone (DBB) and the ComCam Observatory
 Operations Data Service (OODS) can act on them.  These services communicate
 to each other using RabbitMQ.  A Redis database is also used to advertise
 service availablity and service health.
-
 
 The archiver begins in the STANDBY state. When it receives a START command,
 it transitions to the DISABLED state.  This causes the CCArchiver to attempt
@@ -41,7 +42,6 @@ Forwarder, which sends back an acknowledgment that the message was received.
 When the "endReadout" message is received, the CCArchiver sends the message to
 the Forwarder, which sends back an acknowledgment that the message was
 received.
-
 
 When the "largeFileObjectAvailable" is received indicating that the header is
 available from the HeaderService, the CCArchiver sends the message to the
@@ -63,8 +63,8 @@ When the message "CC_FILE_INGEST_REQUEST" is received from the ComCam OODS,
 the ComCam Archiver translates that messages and transmits the status of the
 Butler file ingestion via SAL as a CCArchiver event.
 
-
 Internal Operation
+==================
 
 This section describes the interaction between the Archiver, Controller, and 
 Forwarder. Actions the Forwarder takes after receiving messages are outlined
@@ -114,7 +114,7 @@ When the message is received from the OODS, the Archiver transmits the status
 of the Butler file ingestion via SAL as an Archiver event.
 
 Service Status
- 
+==============
 When the Archiver and Forwarder services are paired, they must each be able to 
 detect when the other service is no longer active to indicate a problem
 exists. This section describes the mechanism used to accomplish this.
@@ -174,7 +174,6 @@ each other the "well known" service status location is deliberate. Multiple
 Forwarders (as a backup) can be deployed, each with its status location. The 
 Forwarder can be paired with either AuxTel or ComCam but doesn't know which 
 until its initial contact.
-
  
 
 
@@ -231,12 +230,13 @@ To build:
 
 1) Download a copy of the repository:
 
-    $ git clone http://github.com/lsst-dm/dm_iip_deploy
+  | $ git clone http://github.com/lsst-dm/dm_iip_deploy
 
 2) Execute the following:
-    $ cd dm_iip_deploy/docker
-    $ . ./versions.sh
-    $ docker-compose build base ccbase ccarchiver cccontroller
+
+  | $ cd dm_iip_deploy/docker
+  | $ . ./versions.sh
+  | $ docker-compose build base ccbase ccarchiver cccontroller
 
 We supply a build script, dm_iip_deploy/docker/build.sh, which will build all containers.
 
@@ -254,63 +254,34 @@ Note the version number of the containers:
 
 Execute the following:
 
-$ docker images | grep cc
-lsstts/cccontroller  1.2.0_ts_salobj_5.17.0_ts_idl_1.3.0_6.1.0_4.1.4  b24179345b6d  10 seconds ago  2.15GB
-lsstts/ccarchiver    1.2.0_ts_salobj_5.17.0_ts_idl_1.3.0_6.1.0_4.1.4  3e1fe6cb2baa  10 seconds ago  2.15GB
-lsstts/ccbase        2.2.0_ts_salobj_5.17.0_ts_idl_1.3.0_6.1.0_4.1.4  aa3e0406e4c1  10 seconds ago  2.15GB
+ | $ docker images | grep cc
+ | lsstts/cccontroller  1.2.0_ts_salobj_5.17.0_ts_idl_1.3.0_6.1.0_4.1.4  b24179345b6d  10 seconds ago  2.15GB
+ | lsstts/ccarchiver    1.2.0_ts_salobj_5.17.0_ts_idl_1.3.0_6.1.0_4.1.4  3e1fe6cb2baa  10 seconds ago  2.15GB
+ | lsstts/ccbase        2.2.0_ts_salobj_5.17.0_ts_idl_1.3.0_6.1.0_4.1.4  aa3e0406e4c1  10 seconds ago  2.15GB
 
 
 There are shell scripts provided to execute the containers.
 
 The CCArchiver container script requires three arguments:  
 1) The site name (ncsa or base)
+
 2) The version number of the container image
+
 3) The network on which SAL traffic runs
 
-$ cd dm_iip_deploy
-$ ./bin/run_ccarchiver.sh ncsa 1.2.0_ts_salobj_5.17.0_ts_idl_1.3.0_6.1.0_4.1.4 141.142.238.15
+To run the CC Archiver container, execute the following:
+
+ | $ cd dm_iip_deploy
+ | ./bin/run_ccarchiver.sh ncsa 1.2.0_ts_salobj_5.17.0_ts_idl_1.3.0_6.1.0_4.1.4 141.142.238.15
 
 The CCController container script requires two arguments
 1) The site name (ncsa or base)
 2) The version number of the container image
 
-To run the containers, execute the following:
+To run the CC Controller containers, execute the following:
 
-$ cd dm_iip_deploy
-$ ./bin/run_cccontroller.sh ncsa 1.2.0_ts_salobj_5.17.0_ts_idl_1.3.0_6.1.0_4.1.4
-
-
-
-.. _Usage:
-
-Usage
-=====
-
-The user has very little direct interaction with the Archiver, other than being 
-able to get it to change states.  The Archiver's activities are automatic 
-when it enters the ENABLED state, and no direct user interaction is required 
-for it to operate.
-
-The Archiver begins in STANDBY mode when it first starts.
-
-When a "start" command is sent to the Archiver while it is in STANDBY state,
-it transitions to the DISABLED state.
-
-
-When an "enable" command is sent to the Archiver, it transitions from DISABLED
-to the ENABLED state.  When the Archiver is in ENABLED state will accept
-incoming SAL messages, and will act on them as described in the "Overview" 
-section of the user guide.
-
-If the CC Archiver is in the ENABLED state, sending it "disable" will put it 
-into the DISABLED state.  Once this is done, incoming messages that it had 
-previously been listening to will be ignored.
-
-If the CC Archiver is in the DISABLED state, sending it "standby" will put it 
-into the STANDBY state.
-
-When an "exitControl" command is sent to the Archiver's process while it is in 
-STANDBY, and its process will exit.
+ | $ cd dm_iip_deploy
+ | $ ./bin/run_cccontroller.sh ncsa 1.2.0_ts_salobj_5.17.0_ts_idl_1.3.0_6.1.0_4.1.4
 
 .. _Documentation:
 
