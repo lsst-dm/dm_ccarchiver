@@ -70,9 +70,13 @@ files which are later used by the OODS and the Data Backbone.
 
 The Archiver and the Controller each run in their own Docker container.
 
-The user has very little direct interaction with the Archiver, other than being able to get it to change states.  The Archiver's activities are automatic when it enters the ENABLED state, and no direct user interaction is required for it to operate.
+The user has very little direct interaction with the Archiver, other than 
+being able to get it to change states.  The Archiver's activities are 
+automatic when it enters the ENABLED state, and no direct user interaction
+is required for it to operate.
 
 Usage
+=====
 
 The Archiver begins in STANDBY mode when it first starts.
 
@@ -94,18 +98,3 @@ into the STANDBY state.
 
 When an "exitControl" command is sent to the Archiver's process while it is in 
 STANDBY, and its process will exit.
-
-
-CCArchiver Interface
-======================
-
-[This area should link to the XML, then discuss the primary commands/events/telemetry that are expected to be used.
-A full explanation of all possible commands/events/telemetry is beyond the scope of this document.
-However, the description in the XML should be verified to be adequately populated such that a user can find the deeper information if required.]
-
-Example Use-Case
-================
-
-[This area should walk the user through the standard use-case(s) for using the CSC.
-This includes any required code, usage of certain commands/events etc.
-Multiple code blocks will probably be necessary.]

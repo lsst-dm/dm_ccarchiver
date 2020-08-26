@@ -26,6 +26,8 @@ specialized subclasses and message callbacks.
 
 The following required entries are in the YAML file:
 
+.. code-block:: yaml
+    :linenos:
 
 # Example Configuration settings for CCArchiver
 ROOT:
