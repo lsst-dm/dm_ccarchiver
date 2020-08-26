@@ -1,8 +1,8 @@
 .. _Configuration_details:
 
-#######################
+########################
 CCArchiver Configuration
-#######################
+########################
 
 Note: The CC Archiver is currently a ConfigurableCSC but will change to a 
 BasicCSC in the future.
@@ -11,9 +11,11 @@ The ts_salobj configuration for this CSC is always set to "normal" on START.
 It has no real configuration parameters at this level. Most of the configuration
 is static, not SAL facing, and is set in a YAML file that is loaded by the CSC.
 
-The CCArchiver is configured using a YAML file. It is loaded from 
-$IIP_CONFIG_DIR/ccarchiver_config.yaml. The $IIP_CONFIG_DIR is set on the 
-command line which starts the container.
+The CCArchiver is configured using a YAML file. It is loaded from:
+
+ | $IIP_CONFIG_DIR/ccarchiver_config.yaml 
+
+The $IIP_CONFIG_DIR is set on the command line which starts the container.
 
 Our configuration method allows the re-use of the Archiver code between the 
 ATArchiver, CCArchiver, and CatchupArchiver.  We do not hard code constant 
@@ -27,18 +29,21 @@ specialized subclasses and message callbacks.
 The following required entries are in the YAML file:
 
 .. code-block:: yaml
-    :linenos:
 
     # Example Configuration settings for CCArchiver
+
     ROOT:
 
       # host where Redis service is running
+
       REDIS_HOST: localhost
     
       # Redis database used by ComCam
+
       ARCHIVER_REDIS_DB: 14
     
       # RabbitMQ queue to send messages to Forwarder
+
       FORWARDER_PUBLISH_QUEUE: cc_foreman_ack_publish
     
       # RabbitMQ queue to send messages to OODS
