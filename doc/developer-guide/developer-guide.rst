@@ -184,8 +184,17 @@ Dependencies
 
 [This section should list dependencies in bullet form]
 
-* `SAL <https://ts-sal.lsst.io>`_ - v4.0.0
-* ts_salobj - v5.2.0
+* `SAL <https://ts-sal.lsst.io>`_ - 4.1.4
+* ts_salobj - 5.17.0
+* ts_idl - 1.3.0
+* ts_xml - 6.1.0
+* OpenSplice - OpenSpliceDDS-6.9.0-8
+* DDS - v6.9.190925_7
+* dm_csc_base - 2.2.0
+* dm_CCarchiver - 1.2.0
+* pika - 1.1.0
+* redis - 3.5.3
+
 
 .. Linking to the previous versions may also be worthwhile, depending on the CSC
 
@@ -248,7 +257,7 @@ the files once they are written by the Forwarder to a void copying them.
 
 To run the containers, download the dm_iip_deploy repository:
 
-$ git clone http://github.com/lsst-dm/dm_iip_deploy
+ | $ git clone http://github.com/lsst-dm/dm_iip_deploy
 
 Note the version number of the containers:
 
@@ -263,6 +272,7 @@ Execute the following:
 There are shell scripts provided to execute the containers.
 
 The CCArchiver container script requires three arguments:  
+
 1) The site name (ncsa or base)
 
 2) The version number of the container image
@@ -275,7 +285,9 @@ To run the CC Archiver container, execute the following:
  | ./bin/run_ccarchiver.sh ncsa 1.2.0_ts_salobj_5.17.0_ts_idl_1.3.0_6.1.0_4.1.4 141.142.238.15
 
 The CCController container script requires two arguments
+
 1) The site name (ncsa or base)
+
 2) The version number of the container image
 
 To run the CC Controller containers, execute the following:
