@@ -38,7 +38,7 @@ class CCArchiverCSC(ArchiverCSC):
     """
 
     def __init__(self, index):
-        super().__init__("CCArchiver", index=index, initial_state=salobj.State.STANDBY):
+        super().__init__("CCArchiver", index=index, initial_state=salobj.State.STANDBY)
 
         domain = salobj.Domain()
 
