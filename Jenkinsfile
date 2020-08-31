@@ -16,6 +16,7 @@ pipeline{
             steps{
                 sh """
                     source /home/saluser/.setup_dev.sh
+                    pip install .
                     pip install -r doc/requirements.txt
                     package-docs build
                     ltd upload --product dm-ccarchiver --git-ref ${GIT_BRANCH} --dir doc/_build/html
