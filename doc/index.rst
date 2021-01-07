@@ -56,8 +56,6 @@ CCArchiver
 .. image:: https://img.shields.io/badge/ts_xml-dm_CCArchiver-green.svg
     :target: https://ts-xml.lsst.io/sal_interfaces/CCArchiver.html
 
-.. TODO: Delete the note when the page becomes populated
-
 .. Warning::
 
    **This CSC documentation is under development and not ready for active use.**
@@ -71,6 +69,15 @@ The Data Management CCArchiver coordinates Commissioning Camera
 archiving activities for the Vera C. Rubin Observatory.  This service 
 interacts with other services coordinate retrieval and archival of
 image data from the ComCam data acquisition system.
+
+The primary services that the CCArchiver interacts with are the Forwarder
+and the ComCam Controller.  The Forwarder retrieves and assembles
+images. The ComCam Controller presents where files should be deposited and
+stages files where the `Data Backbone https://dmtn-122.lsst.io` (DBB) and
+the ComCam `Observatory Operations Data Service https://github.com/lsst-dm/ctrl_oods` (OODS) can act on them. 
+
+The user does not directly interact with this CSC, but instead listens for
+events indicating image ingestion into the OODS.
 
 .. note:: If you are interested in viewing other branches of this repository append a `/v` to the end of the url link. For example `https://ts-xml.lsst.io/v/`
 

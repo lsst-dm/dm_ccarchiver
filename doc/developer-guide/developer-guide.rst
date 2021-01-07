@@ -21,23 +21,24 @@ Introduction
 The primary services that the CCArchiver interacts with are the Forwarder 
 (dm_Forwarder) and the ComCam Controller.  The Forwarder retrieves and assembles
 images. The ComCam Controller presents where files should be deposited and
-stages files where the Data Backbone (DBB) and the ComCam Observatory
-Operations Data Service (OODS) can act on them.  These services communicate
+stages files where the `Data Backbone https://dmtn-122.lsst.io` (DBB) and 
+the ComCam `Observatory Operations Data Service https://github.com/lsst-dm/ctrl_oods` (OODS) can act on them.  These services communicate
 to each other using RabbitMQ.  A Redis database is also used to advertise
 service availablity and service health.
 
 The archiver begins in the STANDBY state. When it receives a START command,
 it transitions to the DISABLED state.  This causes the CCArchiver to attempt
 to pair with an available Forwarder service through a Redis database. It also
-establishes connections to a RabbitMQ server. After the archiver receives an
-ENABLE SAL command, it is ready to receive messages.
+establishes connections to a RabbitMQ server. After the archiver is brought to
+the ENABLED state, it is ready to receive messages.
 
 When the "startIntegration" message is received, the CCArchiver sends a
 message to the ComCam Controller, informing it that a new archive image will
 arrive soon.  In the controller’s response is the target directory for where
 the image is supposed to be deposited by the forwarder. This target directory
-changes over time. The target directory is then sent in a message to the
-Forwarder, which sends back an acknowledgment that the message was received.
+changes over time because it incorporates the current date. The target 
+directory is then sent in a message to the Forwarder, which sends back an 
+acknowledgment that the message was received.
 
 When the "endReadout" message is received, the CCArchiver sends the message to
 the Forwarder, which sends back an acknowledgment that the message was
@@ -49,7 +50,7 @@ Forwarder, which sends back an acknowledgment that the message was received.
 
 When the telemetry message "IMAGE_RETRIEVAL_FOR_ARCHIVING" message is received
 via RabbitMQ from the ComCam Controller, the CCArchiver translates this into the
-"imageRetrievalForArchiving" message and transmits it via SAL.
+"imageRetrievalForArchiving" event and publishes it via SAL.
 
 Note that "IMAGE_RETRIEVAL_FOR_ARCHIVING" indicates that the Forwarder has
 contacted the ComCam Controller and told it that it has finished writing
@@ -61,7 +62,7 @@ message to the ComCam Archiver about the status of the file ingestion.
 
 When the message "CC_FILE_INGEST_REQUEST" is received from the ComCam OODS,
 the ComCam Archiver translates that messages and transmits the status of the
-Butler file ingestion via SAL as a CCArchiver event.
+Butler file ingestion as an "imageInOODS" event published to SAL.
 
 Internal Operation
 ==================
@@ -108,7 +109,12 @@ can now be acted upon.
 The OODS then ingests the file into the Butler repository and issues a 
 RabbitMQ message to the Archiver about the status of the file ingestion. If
 the ingest fails, failure status is indicated with a description of what
-happened, and that information is transmitted to the Archiver.
+happened, and that information is transmitted to the Archiver.  The Archiver
+does not transition to a FAULT state in this case because there was no failure
+in the Archiver. The response from the OODS that an attempt to ingest 
+failed may have occurred for any number reason and it reports that reason
+to the best of its ability.  Subsequent ingest attempts can still succeed, so
+the OODS continues to operate.
 
 When the message is received from the OODS, the Archiver transmits the status 
 of the Butler file ingestion via SAL as an Archiver event.

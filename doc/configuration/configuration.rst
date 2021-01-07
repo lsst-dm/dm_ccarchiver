@@ -4,9 +4,6 @@
 CCArchiver Configuration
 ########################
 
-Note: The CC Archiver is currently a ConfigurableCSC but will change to a 
-BasicCSC in the future.
-
 The ts_salobj configuration for this CSC is always set to "normal" on START.
 It has no real configuration parameters at this level. Most of the configuration
 is static, not SAL facing, and is set in a YAML file that is loaded by the CSC.

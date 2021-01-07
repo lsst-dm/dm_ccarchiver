@@ -66,7 +66,10 @@ Controller, Forwarder, and Observatory Operations Data Service (OODS).
 
 The Archive Controller handles operations for images. It sets up storage
 locations that the Forwarder uses and creates hard links for incoming 
-files which are later used by the OODS and the Data Backbone.
+files which are later used by the OODS and the Data Backbone.  The OODS is
+a service which maintains a Butler repository for local access.  The Data
+Backbone is part of the software service infrastructure that transmits the
+data to the LDF.
 
 The Archiver and the Controller each run in their own Docker container.
 
@@ -82,7 +85,6 @@ The Archiver begins in STANDBY mode when it first starts.
 
 When a "start" command is sent to the Archiver while it is in STANDBY state,
 it transitions to the DISABLED state.
-
 
 When an "enable" command is sent to the Archiver, it transitions from DISABLED
 to the ENABLED state.  When the Archiver is in ENABLED state will accept
