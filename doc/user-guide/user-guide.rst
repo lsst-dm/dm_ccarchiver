@@ -81,6 +81,28 @@ is required for it to operate.
 Usage
 =====
 
+The deployment scripts for Archiver processes are located in http://github.com/lsst-dm/dm_iip_deploy
+
+The Archiver services are two separate services, the Archiver CSC service and the Controller.
+
+To start the Archiver service, use the following:
+
+usage: dm_iip_deploy/bin/run_ccarchiver.sh -p [summit|ncsa] -c container_version
+
+example:
+
+dm_iip_deploy/bin/run_ccarchiver.sh -p summit -c 4.1.0_base_3.2.0_c0018
+
+To start the Controller service, use the following:
+
+usage: dm_iip_deploy/bin/run_cccontroller.sh -p [summit|ncsa] -c container_version
+
+example:
+
+dm_iip_deploy/bin/run_cccontroller.sh -p summit -c 4.1.0_base_3.2.0_c0018
+
+dm_iip_deploy/bin/run_cccontroller.sh -p summit -c 4.1.0_base_3.2.0_c0018
+
 The Archiver begins in STANDBY mode when it first starts.
 
 When a "start" command is sent to the Archiver while it is in STANDBY state,
@@ -100,3 +122,10 @@ into the STANDBY state.
 
 When an "exitControl" command is sent to the Archiver's process while it is in 
 STANDBY, and its process will exit.
+
+It can then be restarted using same the procedure:
+
+dm_iip_deploy/bin/run_ccarchiver.sh -p summit -c 4.1.0_base_3.2.0_c0018
+
+Note that the Controller service does not exit when the Archiver is shut down.  That
+can be stopped separately, if desired.
